@@ -1,3 +1,6 @@
+import { useRouter } from "next/router"
+import { useCallback } from "react"
+
 import Ethereum from "../../assets/ethereum"
 
 type NFTCardProps = {
@@ -12,8 +15,14 @@ type NFTCardProps = {
 }
 
 export function NFTCard({nft}: NFTCardProps) {
+  const router = useRouter()
+
+  const handleNftClick = useCallback(() => {
+    router.push(`/nft/${nft.id}`)
+  }, [])
+
   return (
-    <div className="w-[24rem] h-[31rem] bg-[#242634] rounded-[1.25rem] cursor-pointer hover:scale-105">
+    <div className="w-[24rem] h-[31rem] bg-[#242634] rounded-[1.25rem] cursor-pointer hover:scale-105" onClick={handleNftClick}>
       <div>
         <img src={nft.image} alt={nft.name} className='rounded-[1.25rem] h-80 p-2 w-96' />
       </div>

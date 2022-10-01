@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { NFTCard } from '../components/NFTCard'
 
-const nfts = [{
+export const nfts = [{
   id: '1',
   name: 'Meu nft',
   price: '0.1',
