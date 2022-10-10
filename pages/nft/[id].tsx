@@ -1,4 +1,4 @@
-import { useContract, useListing, useListings } from "@thirdweb-dev/react";
+import { useAddress, useContract, useListing, useListings, useNFT } from "@thirdweb-dev/react";
 import { Marketplace } from "@thirdweb-dev/sdk";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -12,16 +12,19 @@ export default function NftDetails() {
   const router = useRouter()
 
   const marketplace = useContract<Marketplace>('0x9aCE30d521C9859665d2A1589bF271FA631a2c61')
-
   const listing = useListing(marketplace.contract, Number(router.query.id))
-  const {data: listings} = useListings(marketplace.contract)
+  const { data: listings } = useListings(marketplace.contract)
+
+  const { contract } = useContract(listing?.data?.assetContractAddress)
+  const { data: nft } = useNFT(contract, listing?.data?.asset?.id) //id do NFT
+
+  const walletAddress = useAddress()
+  const userIsNftOwner = walletAddress && walletAddress === nft?.owner
+  const shouldDisableBuyNftButton =  loadingPurchase || listing?.data?.quantity.toString() === '0'
 
   const handleBuyNft = useCallback(async () => {
     try {
       setLoadingPurchase(true)
-
-      console.log( marketplace?.data);
-      
 
       await marketplace?.data?.direct?.buyoutListing(listing?.data?.id, 1)
       Notify.success('You have successfully bought this NFT!')
@@ -48,19 +51,19 @@ export default function NftDetails() {
           <hr className="w-full border-[#242634] mt-8 mb-4" />
 
           <div>
-            <p className="text-[#93989A]">Creator</p>
-            <p>{listing?.data?.sellerAddress.slice(0, 10)}</p>
+            <p className="text-[#93989A]">Owner</p>
+            <p>{nft?.owner?.slice(0, 10)} {userIsNftOwner && '(You)'}</p>
           </div>
 
           <hr className="w-full border-[#242634] mt-8 mb-4" />
 
           <div>
             <button
-              disabled={loadingPurchase}
+              disabled={shouldDisableBuyNftButton}
               onClick={handleBuyNft}
-              className={`bg-[#ff2748] py-[1rem] px-6 rounded-xl ${loadingPurchase ? 'opacity-50' : 'hover:scale-105 active:scale-95'}`}
+              className={`bg-[#ff2748] py-[1rem] px-6 rounded-xl ${shouldDisableBuyNftButton ? 'opacity-50' : 'hover:scale-105 active:scale-95'}`}
             >
-              Buy Nft
+              {loadingPurchase ? 'loading' : 'Buy Nft'}
             </button>
           </div>
         </div>
@@ -71,7 +74,7 @@ export default function NftDetails() {
 
         <div className="flex flex-wrap items-start gap-16 mt-7">
           {listings?.slice(0,3).map(listing => (
-            <NFTCard listing={listing} key={listing.id} />
+            <NFTCard listing={listing} key={listing.id} /> //id do NFT no marketplace
           ))}
         </div>
       </div>
