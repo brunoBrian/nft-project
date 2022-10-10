@@ -1,31 +1,35 @@
+import { useContract, useListing, useListings } from "@thirdweb-dev/react";
+import { Marketplace } from "@thirdweb-dev/sdk";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { nfts } from "..";
 import { NFTCard } from "../../components/NFTCard";
 
 export default function NftDetails() {
   const router = useRouter()
 
-  const nft = nfts.find(nft => nft.id === router.query.id)
+  const marketplace = useContract<Marketplace>('0x9aCE30d521C9859665d2A1589bF271FA631a2c61')
+
+  const listing = useListing(marketplace.contract, router.query.id)
+  const {data: listings} = useListings(marketplace.contract)
 
   return (
     <div className="px-24">
       <Head>
-        <title>{nft?.name} NFT - Details page</title>
+        <title>{listing?.data?.asset?.name} NFT - Details page</title>
       </Head>
 
       <div className="mt-24 flex">
-        <img src={nft?.image} alt={nft?.name} className="rounded-[1.25rem] w-[45%] h-auto" />
+        <img src={listing?.data?.asset?.image} alt={listing?.data?.asset?.name.toString()} className="rounded-[1.25rem] w-[45%] h-auto" />
 
         <div className="ml-10 w-[55%]">
-          <h1 className="text-5xl font-bold">{nft?.name}</h1>
-          <p className="text-[#93989A] mt-4">{nft?.description}</p>
+          <h1 className="text-5xl font-bold">{listing?.data?.asset?.name}</h1>
+          <p className="text-[#93989A] mt-4">{listing?.data?.asset?.description}</p>
 
           <hr className="w-full border-[#242634] mt-8 mb-4" />
 
           <div>
             <p className="text-[#93989A]">Creator</p>
-            <p>{nft?.author}</p>
+            <p>{listing?.data?.sellerAddress}</p>
           </div>
 
           <hr className="w-full border-[#242634] mt-8 mb-4" />
@@ -42,8 +46,8 @@ export default function NftDetails() {
         <h2 className="text-4xl mt-24">More Works</h2>
 
         <div className="flex flex-wrap items-start gap-16 mt-7">
-          {nfts.slice(0,3).map(nft => (
-            <NFTCard nft={nft} key={nft.id} />
+          {listings?.slice(0,3).map(listing => (
+            <NFTCard listing={listing} key={listing.id} />
           ))}
         </div>
       </div>

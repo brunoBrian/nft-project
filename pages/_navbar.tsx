@@ -9,7 +9,7 @@ export default function Navbar() {
 
   const handleGlobalClick = useCallback(() => {
     router.push('/')
-  }, [])
+  }, [router])
 
   return(
     <div>
@@ -20,7 +20,7 @@ export default function Navbar() {
         </div>
         <ConnectWallet
           colorMode="light"
-          accentColor="#F213A4"
+          accentColor="#242635"
         />
       </div>
       <hr className="w-full border-[#242634]" />
