@@ -2,15 +2,35 @@ import { useContract, useListing, useListings } from "@thirdweb-dev/react";
 import { Marketplace } from "@thirdweb-dev/sdk";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
+import { Notify } from 'notiflix/build/notiflix-notify-aio'
+
 import { NFTCard } from "../../components/NFTCard";
 
 export default function NftDetails() {
+  const [loadingPurchase, setLoadingPurchase] = useState(false)
   const router = useRouter()
 
   const marketplace = useContract<Marketplace>('0x9aCE30d521C9859665d2A1589bF271FA631a2c61')
 
-  const listing = useListing(marketplace.contract, router.query.id)
+  const listing = useListing(marketplace.contract, Number(router.query.id))
   const {data: listings} = useListings(marketplace.contract)
+
+  const handleBuyNft = useCallback(async () => {
+    try {
+      setLoadingPurchase(true)
+
+      console.log( marketplace?.data);
+      
+
+      await marketplace?.data?.direct?.buyoutListing(listing?.data?.id, 1)
+      Notify.success('You have successfully bought this NFT!')
+    }catch(err) {
+      Notify.failure('Failed to buy this NFT!')
+    } finally {
+      setLoadingPurchase(false)
+    }
+  }, [listing?.data?.id, marketplace])
 
   return (
     <div className="px-24">
@@ -29,14 +49,18 @@ export default function NftDetails() {
 
           <div>
             <p className="text-[#93989A]">Creator</p>
-            <p>{listing?.data?.sellerAddress}</p>
+            <p>{listing?.data?.sellerAddress.slice(0, 10)}</p>
           </div>
 
           <hr className="w-full border-[#242634] mt-8 mb-4" />
 
           <div>
-            <button className="bg-[#ff2748] py-[1rem] px-6 rounded-xl hover:scale-105 active:scale-95">
-              Place a Bid
+            <button
+              disabled={loadingPurchase}
+              onClick={handleBuyNft}
+              className={`bg-[#ff2748] py-[1rem] px-6 rounded-xl ${loadingPurchase ? 'opacity-50' : 'hover:scale-105 active:scale-95'}`}
+            >
+              Buy Nft
             </button>
           </div>
         </div>

@@ -37,7 +37,7 @@ export function NFTCard({ listing }: NFTCardProps) {
 
           <div className="relative">
             <button className="absolute right-1 bottom-0.5 bg-[#ff2748] py-[0.625rem] px-5 rounded-xl hover:scale-105 active:scale-95">
-              Place a Bid
+              Buy Nft
             </button>
           </div>
         </div>
