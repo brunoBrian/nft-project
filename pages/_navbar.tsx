@@ -13,7 +13,7 @@ export default function Navbar() {
 
   return(
     <div>
-      <div className="h-20 px-[10%] py-10 flex items-center justify-between">
+      <div className="h-20 px-[6%] py-10 flex items-center justify-between">
         <div className="flex items-center cursor-pointer" onClick={handleGlobalClick}>
           <Logo />
           <p className="ml-3 font-semibold">Bruno NFT</p>

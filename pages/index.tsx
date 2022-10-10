@@ -7,9 +7,9 @@ import { NFTCard } from '../components/NFTCard'
 export default function Home() {
   const [search, setSearch] = useState('')
 
-  const marketplace = useContract<Marketplace>('0x9aCE30d521C9859665d2A1589bF271FA631a2c61')
+  const marketplace = useContract<Marketplace>(process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT)
 
-  const {data: listings} = useListings(marketplace.contract)
+  const {data: listings, status} = useListings(marketplace.contract)
 
   const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
@@ -19,33 +19,38 @@ export default function Home() {
     return listings?.filter(nft => search ? nft.asset.name.toString().toLowerCase().includes(search.toLowerCase()) : true)
   }, [search, listings])
 
-  return (
-    <div className='h-full w-screen bg-[#1d1f2b] px-24'>
+  return ( 
+    <div className='h-full w-screen bg-[#1d1f2b] px-[6%] min-h-[80vh]'>
       <Head>
         <title>Bruno NFT</title>
       </Head>
 
-      <div className='flex justify-between items-baseline'>
-        <h2 className='text-5xl font-bold text-white mt-24'>
-          Discovery
-        </h2>
+      {status === 'loading' ? (<p>Loading...</p>) : (
 
-        <input type="text" className='h-12 w-64 p-4 rounded-xl' placeholder='Search item' onChange={handleSearch} value={search} />
-      </div>
+      <>
+          <div className='flex justify-between items-baseline flex-wrap'>
+            <h2 className='text-5xl font-bold text-white mt-24'>
+              Discovery
+            </h2>
 
-      <hr className='w-full border-[#242634] mt-12' />
+            <input type="text" className='h-12 w-64 p-4 rounded-xl' placeholder='Search item' onChange={handleSearch} value={search} />
+          </div>
 
-      <div className='flex-col items-start gap-7 mt-12'>
-        <h2 className='text-5xl font-bold'>
-          Popular Bid
-        </h2>
+          <hr className='w-full border-[#242634] mt-12' />
 
-        <div className='flex flex-wrap items-start gap-7 mt-7 min-h[50%]'>
-          {filteredListings?.map(listing => (
-            <NFTCard listing={listing} key={listing.id} />
-          ))}
-        </div>
-      </div>
+          <div className='flex-col items-start gap-7 mt-12'>
+            <h2 className='text-5xl font-bold'>
+              Popular Bid
+            </h2>
+
+            <div className='flex flex-wrap items-start gap-7 mt-7 min-h[50%]'>
+              {filteredListings?.map(listing => (
+                <NFTCard listing={listing} key={listing.id} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
