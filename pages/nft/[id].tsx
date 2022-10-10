@@ -11,7 +11,7 @@ export default function NftDetails() {
   const [loadingPurchase, setLoadingPurchase] = useState(false)
   const router = useRouter()
 
-  const marketplace = useContract<Marketplace>(process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT)
+  const marketplace = useContract<Marketplace | any>(process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT, '')
   const listing = useListing(marketplace.contract, Number(router.query.id))
   const { data: listings } = useListings(marketplace.contract)
 
