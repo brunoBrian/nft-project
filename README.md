@@ -8,11 +8,11 @@
 
 <p align="center">
   <br>
-  <img src="https://img.shields.io/github/languages/top/carloslevir/coders-news">
-  <img src="https://img.shields.io/github/issues/carloslevir/coders-news">
-  <img src="https://img.shields.io/github/forks/carloslevir/coders-news">
-  <img src="https://img.shields.io/github/stars/carloslevir/coders-news">
-  <img src="https://img.shields.io/github/license/carloslevir/coders-news">
+  <img src="https://img.shields.io/github/languages/top/brunoBrian/nft-project">
+  <img src="https://img.shields.io/github/issues/brunoBrian/nft-project">
+  <img src="https://img.shields.io/github/forks/brunoBrian/nft-project">
+  <img src="https://img.shields.io/github/stars/brunoBrian/nft-project">
+  <img src="https://img.shields.io/github/license/brunoBrian/nft-project">
 </p>
 
 <h4 align="center">
